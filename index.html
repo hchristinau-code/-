@@ -1,1 +1,639 @@
-<h1>占位</h1>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>青甘大环线 · 9天8夜</title>
+<style>
+  :root{
+    --sand:#EFE6D3; --sand-hi:#FBF6EA; --ink:#2B2420; --ink-soft:#5B5346;
+    --clay:#C4522A; --teal:#2E7D7D; --gold:#B8862E; --line:#CBBBA0;
+    --serif: Georgia, "Songti SC", "STSong", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", sans-serif;
+  }
+  html.night{
+    --sand:#12141F; --sand-hi:#1B1E30; --ink:#E9E4D6; --ink-soft:#A9A392;
+    --clay:#E0A458; --teal:#4FB5C4; --gold:#E2A24B; --line:#333850;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--sand); color:var(--ink); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; transition:background .6s ease, color .6s ease;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:640px; margin:0 auto; padding:0 18px;}
+  a{color:inherit;}
+  h1,h2,h3{font-family:var(--serif); font-weight:600; margin:0;}
+  .divider{
+    width:100%; height:14px; margin:26px 0;
+    background-repeat:repeat-x; background-position:center;
+    background-size:34px 14px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='14'%3E%3Cpath d='M0 8 Q8 2 17 8 T34 8' fill='none' stroke='%23CBBBA0' stroke-width='1.4'/%3E%3C/svg%3E");
+    opacity:.7;
+  }
+  html.night .divider{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='14'%3E%3Cpath d='M0 8 Q8 2 17 8 T34 8' fill='none' stroke='%23333850' stroke-width='1.4'/%3E%3C/svg%3E");
+  }
+
+  header.top{padding:34px 18px 8px;}
+  .eyebrow{font-size:13px; color:var(--ink-soft); letter-spacing:.02em;}
+  .title{font-size:30px; line-height:1.15; margin-top:6px;}
+  .subtitle{font-size:14px; color:var(--ink-soft); margin-top:6px;}
+
+  .hero{
+    margin:18px 18px 0; border-radius:2px; padding:22px 20px 20px;
+    background:var(--sand-hi); border:1px solid var(--line);
+    position:relative; overflow:hidden;
+  }
+  .hero:before{ content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--clay); }
+  .hero .tag{font-size:12px; color:var(--ink-soft); margin-bottom:4px;}
+  .hero .event{font-family:var(--serif); font-size:19px; margin-bottom:14px;}
+  .countdown{display:flex; gap:14px;}
+  .countdown .cell{flex:1; text-align:center;}
+  .countdown .num{font-family:var(--serif); font-size:34px; font-variant-numeric:tabular-nums; color:var(--clay);}
+  .countdown .lab{font-size:11px; color:var(--ink-soft); margin-top:2px;}
+
+  .section-head{padding:0 18px; margin-bottom:14px;}
+  .section-head h2{font-size:22px;}
+  .section-head p{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+
+  .map-box{margin:0 18px; border:1px solid var(--line); background:var(--sand-hi); padding:14px 10px 6px;}
+  .map-legend{display:flex; flex-wrap:wrap; gap:8px 14px; padding:0 18px; margin-top:12px; font-size:12px; color:var(--ink-soft);}
+  .map-legend span{display:inline-flex; align-items:center; gap:6px;}
+  .map-legend i{width:10px; height:10px; border-radius:50%; display:inline-block;}
+
+  .pass{ margin:0 18px 14px; background:var(--sand-hi); border:1px solid var(--line); border-style:dashed; padding:16px 18px; }
+  .pass.confirmed{ border-style:solid; }
+  .pass .kind{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em;}
+  .pass .main{font-family:var(--serif); font-size:17px; margin-top:4px;}
+  .pass .main.loc{color:var(--teal); cursor:pointer; text-decoration:underline dotted;}
+  .pass .grid{display:grid; grid-template-columns:1fr 1fr; gap:6px 16px; margin-top:10px; font-size:13px;}
+  .pass .grid div b{display:block; font-size:11px; color:var(--ink-soft); font-weight:400;}
+  .pass .note{margin-top:10px; font-size:12.5px; color:var(--gold);}
+  .group-label{padding:0 18px; font-size:13px; color:var(--ink-soft); margin:22px 0 10px;}
+
+  .day{margin:0 18px 10px; border-left:3px solid var(--dcolor,var(--clay)); padding-left:16px; position:relative;}
+  .day summary{list-style:none; cursor:pointer; padding:10px 0;}
+  .day summary::-webkit-details-marker{display:none;}
+  .day .dhead{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
+  .day .dnum{font-family:var(--serif); font-size:13px; color:var(--dcolor,var(--clay));}
+  .day .droute{font-family:var(--serif); font-size:17px; margin-top:2px;}
+  .day .dmeta{font-size:12px; color:var(--ink-soft); margin-top:4px;}
+  .day .weather{font-size:12px; color:var(--teal); margin-top:4px;}
+  .day .caret{font-size:12px; color:var(--ink-soft); flex:none;}
+  .day .body{padding:2px 0 18px;}
+  .timeline{display:flex; flex-direction:column; gap:12px; margin-top:6px;}
+  .trow{display:flex; gap:14px;}
+  .trow .t{width:46px; flex:none; font-size:12.5px; color:var(--ink-soft); padding-top:1px;}
+  .trow .c{flex:1; font-size:14px; line-height:1.5;}
+  .trow .c .book{display:inline-block; margin-left:6px; font-size:11px; padding:1px 6px; border:1px solid var(--gold); color:var(--gold); border-radius:2px;}
+  .day-tip{margin-top:12px; font-size:12.5px; color:var(--ink-soft); background:rgba(184,134,46,.09); padding:10px 12px; border-left:2px solid var(--gold);}
+  .navbtn{ margin-top:10px; margin-right:8px; display:inline-block; font-size:13px; padding:9px 16px; background:var(--clay); color:var(--sand-hi); border:none; cursor:pointer; border-radius:2px; }
+  .navbtn.alt{ background:transparent; color:var(--teal); border:1px solid var(--teal); }
+  .stayline{font-size:13px; margin-top:10px; color:var(--ink-soft);}
+  .stayline b{color:var(--ink); font-weight:500;}
+  .stayline .loc{color:var(--teal); text-decoration:underline dotted; cursor:pointer;}
+  .nodesline{margin-top:12px; font-size:13px;}
+  .nodesline .loc{color:var(--teal); text-decoration:underline dotted; cursor:pointer;}
+
+  ul.todo{list-style:none; margin:0; padding:0 18px;}
+  ul.todo li{ padding:10px 0 10px 26px; border-bottom:1px solid var(--line); font-size:14px; position:relative; }
+  ul.todo li:before{content:"—"; position:absolute; left:0; color:var(--ink-soft);}
+  ul.todo li:last-child{border-bottom:none;}
+
+  .tips{padding:0 18px; display:flex; flex-direction:column; gap:14px;}
+  .tips .tip{font-size:14px; line-height:1.65;}
+  .tips .tip b{font-family:var(--serif); font-weight:600; display:block; margin-bottom:2px;}
+
+  footer{padding:30px 18px 10px; font-size:12px; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header class="top wrap">
+  <div class="eyebrow">2026.09.30 – 10.08 · 逆时针自驾 · 西宁进出</div>
+  <h1 class="title">青甘大环线</h1>
+  <div class="subtitle">张掖 · 敦煌 · 柴达木 · 德令哈 · 茶卡 · 西宁 · 4人同行</div>
+</header>
+
+<div class="hero" id="hero">
+  <div class="tag">此刻关注</div>
+  <div class="event" id="hero-event">加载中…</div>
+  <div class="countdown" id="hero-count">
+    <div class="cell"><div class="num" id="cd-d">–</div><div class="lab">天</div></div>
+    <div class="cell"><div class="num" id="cd-h">–</div><div class="lab">时</div></div>
+    <div class="cell"><div class="num" id="cd-m">–</div><div class="lab">分</div></div>
+    <div class="cell"><div class="num" id="cd-s">–</div><div class="lab">秒</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-head">
+  <h2>行程总览</h2>
+  <p>示意路线图，按道路走廊方向绘制，非精确地理坐标，实际以导航为准</p>
+</div>
+<div class="map-box">
+  <svg viewBox="0 0 400 440" width="100%" style="display:block">
+    <path d="M60 60 Q 18 130 55 190 Q 88 240 68 300 Q 58 350 118 380 Q 210 405 300 360 Q 355 320 335 250 Q 322 195 352 150 Q 370 105 320 65 Q 220 22 60 60 Z"
+      fill="none" stroke="#CBBBA0" stroke-width="2" stroke-dasharray="1 9" stroke-linecap="round"/>
+    <g id="mapNodes" font-family="Georgia, serif" font-size="10.5"></g>
+  </svg>
+</div>
+<div class="map-legend" id="mapLegend"></div>
+
+<div class="divider"></div>
+
+<div class="section-head">
+  <h2>已确认信息</h2>
+  <p>机票 · 租车 · 住宿 · 门票（确认号/证件号/房间号等敏感信息不在页面展示）</p>
+</div>
+
+<div class="group-label">✈ 机票 · 去程 9/30</div>
+<div class="pass confirmed">
+  <div class="kind">Flight · 去程</div>
+  <div class="main">孙 / 顾 · 9C7165</div>
+  <div class="grid">
+    <div><b>出发</b>上海浦东机场 T2 · 08:15</div>
+    <div><b>到达</b>西宁曹家堡 T3 · 12:00</div>
+  </div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">Flight · 去程</div>
+  <div class="main">jia · ZH8107</div>
+  <div class="grid">
+    <div><b>出发</b>广州白云机场 T3 · 08:15</div>
+    <div><b>到达</b>西宁曹家堡 T3 · 11:35</div>
+  </div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">Flight · 去程</div>
+  <div class="main">粽 · HO2245</div>
+  <div class="grid">
+    <div><b>出发</b>上海浦东机场 T2 · 08:00</div>
+    <div><b>到达</b>西宁曹家堡 T3 · 11:25</div>
+  </div>
+</div>
+
+<div class="group-label">✈ 机票 · 返程 10/8</div>
+<div class="pass confirmed">
+  <div class="kind">Flight · 返程</div>
+  <div class="main">孙 / 顾 · MU9960（中转，非终点）</div>
+  <div class="grid">
+    <div><b>出发</b>西宁曹家堡 T3 · 17:35</div>
+    <div><b>到达</b>咸阳机场 T5 · 19:00</div>
+  </div>
+  <div class="note">此后孙/顾于西安中转过夜，不在本手册范围内</div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">Flight · 返程</div>
+  <div class="main">粽 · 9C7166</div>
+  <div class="grid">
+    <div><b>出发</b>西宁曹家堡 T3 · 18:45</div>
+    <div><b>到达</b>上海浦东机场 T2 · 22:00</div>
+  </div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">Flight · 返程</div>
+  <div class="main">jia · CZ2134</div>
+  <div class="grid">
+    <div><b>出发</b>西宁曹家堡 T3 · 20:30</div>
+    <div><b>到达</b>广州白云机场 T2 · 23:50</div>
+  </div>
+  <div class="note">机票原始单据上出现过 CZ2143 / CZ2134 两个不同号码，以你截图确认过的 CZ2134 为准</div>
+</div>
+
+<div class="group-label">🚗 租车</div>
+<div class="pass confirmed">
+  <div class="kind">Car Rental</div>
+  <div class="main">大众途观L · 自动挡 2.0T SUV 5座</div>
+  <div class="grid">
+    <div><b>取车</b>西宁曹家堡机场店(站内) · 9/30 12:00</div>
+    <div><b>还车</b>西宁曹家堡机场店(站内) · 10/8 16:00</div>
+  </div>
+  <div class="note">违章押金¥2000，还车后30天无违章全退</div>
+</div>
+
+<div class="group-label">🏨 住宿 · 全部8晚已确认</div>
+<div class="pass confirmed">
+  <div class="kind">9/30 → 10/1（1晚）</div>
+  <div class="main loc" onclick="nav('七彩丹霞悦客尚景智能酒店')">七彩丹霞悦客尚景智能酒店</div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">10/1 → 10/2（1晚）</div>
+  <div class="main loc" onclick="nav('途远·雅园景观酒店 敦煌市沙州北路1号')">途远 · 雅园景观酒店（敦煌沙洲夜市店）</div>
+  <div class="grid"><div><b>地址</b>敦煌市沙州北路1号</div></div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">10/2 → 10/3（1晚）</div>
+  <div class="main loc" onclick="nav('悦享·曼朵·观景影音民宿 敦煌市月牙泉镇月牙泉村')">悦享 · 曼朵 · 观景影音民宿</div>
+  <div class="grid"><div><b>地址</b>敦煌市月牙泉镇月牙泉村三组48号</div></div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">10/3 → 10/4（1晚）</div>
+  <div class="main loc" onclick="nav('星穹秘境品质酒店 冷湖镇')">星穹秘境品质酒店（冷湖镇店）</div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">10/4 → 10/5（1晚）</div>
+  <div class="main loc" onclick="nav('九紫星苑酒店')">九紫星苑酒店</div>
+  <div class="note">订单上仅标注"海西"，未提供详细街道地址，抵达前建议再跟商家确认一次精确位置</div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">10/5 → 10/6（1晚）</div>
+  <div class="main loc" onclick="nav('宜必思酒店 格尔木昆仑花园店')">宜必思酒店（格尔木昆仑花园店）</div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">10/6 → 10/7（1晚）</div>
+  <div class="main loc" onclick="nav('茶卡天域假日酒店 乌兰茶卡镇巴音路北侧')">茶卡天域假日酒店</div>
+  <div class="grid"><div><b>地址</b>乌兰茶卡镇巴音路北侧</div></div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">10/7 → 10/8（1晚）</div>
+  <div class="main loc" onclick="nav('希岸·轻雅酒店 西宁建国路新千王府井广场店')">希岸 · 轻雅酒店（西宁建国路新千王府井广场店）</div>
+</div>
+
+<div class="group-label">🎫 门票 · 莫高窟 10/2</div>
+<div class="pass confirmed">
+  <div class="kind">莫高窟 · 常规票</div>
+  <div class="main">张*桐 · 10/2 12:30</div>
+</div>
+<div class="pass confirmed">
+  <div class="kind">莫高窟 · 应急票（旺季展2）</div>
+  <div class="main">胡*懿 · 10/2 12:25</div>
+  <div class="note">常规票未抢到、改买的应急票，与张*桐参观内容不完全一样，现场注意区分</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-head">
+  <h2>逐日行程</h2>
+  <p>点击展开当日路线；地点/酒店文字可点击唤起高德地图</p>
+</div>
+<div id="days"></div>
+
+<div class="divider"></div>
+
+<div class="section-head">
+  <h2>待办清单</h2>
+  <p>纯列表，办完请告诉我，我来更新页面</p>
+</div>
+<ul class="todo">
+  <li>提前 7-15 天预约鸣沙山月牙泉门票（官方公众号/游敦煌小程序/携程美团）</li>
+  <li>提前 3-5 天预约张掖七彩丹霞门票</li>
+  <li>提前 3-7 天预约茶卡盐湖门票+小火车</li>
+  <li>确认察尔汗盐湖观光道的接驳/包车安排（不能自驾直接进入核心区）</li>
+  <li>出发前3-5天核实彩虹丹霞·星之谷是否需要预约、门票价格</li>
+  <li>出发前核实西台吉乃尔湖、德令哈段当前路况</li>
+  <li>向九紫星苑酒店确认详细地址（当前订单只标注"海西"）</li>
+  <li>确定10/8西宁市区自由活动想去的地点（塔尔寺/东关清真大寺等）</li>
+  <li>检查轮胎花纹/胎压/备胎/千斤顶/补胎工具；冷湖方向出发前加满油</li>
+  <li>准备离线地图、充电宝、车充、防寒衣物、红景天/高原安等常备药</li>
+</ul>
+
+<div class="divider"></div>
+
+<div class="section-head">
+  <h2>实用贴士</h2>
+</div>
+<div class="tips">
+  <div class="tip"><b>高反节奏</b>D4 从连续三天的低海拔（1140-1500米）骤升翻越当金山口（3800米），是全程海拔曲线最陡的一天，注意多喝水、避免剧烈活动，备好药物。</div>
+  <div class="tip"><b>驾驶轮换</b>D1（落地+8小时驾驶）与D7（新增德令哈后，全程最长的一天）是体力消耗最大的两天，4人可轮流驾驶，每1.5-2小时换手或休息。</div>
+  <div class="tip"><b>国庆车流</b>2026年国庆假期为10/1-10/7，10/8已是工作日。D7（10/6）已避开假期最后一天，但仍建议预留缓冲；10/7直接从茶卡开到西宁，这天不必赶路看日出，可以从容出发。</div>
+  <div class="tip"><b>燃油与补给</b>冷湖至水上雅丹沿线加油点稀少，冷湖出发前务必加满油，不要把沿途小型加油点当作唯一油源。</div>
+  <div class="tip"><b>还车与值机</b>10/8 16:00 还车（西宁机场店内），最早航班（孙/顾）17:35 起飞，之间只有约1.5小时，建议提前清点行李、明确谁先去值机。</div>
+  <div class="tip"><b>景区两日票</b>七彩丹霞门票2日内有效，若想同时看日落和次日日出需在景区留宿两晚，本行程只安排了1晚，只能选择日出或日落其一（当前安排为10/1晨间入园）。</div>
+  <div class="tip"><b>关于青海湖日出</b>行程调整后，10/6-10/7这段不再安排黑马河住宿和日出等候，D8当天路过青海湖沿线但不停留，直接前往西宁。</div>
+</div>
+
+<footer class="wrap">页面始终展示当前最新行程，不保留历史版本。信息如有变动请随时告知。</footer>
+
+<script>
+var DAYS = [
+  {n:1, date:"9/30 周三", color:"#C4522A", route:"西宁机场 → 武威 → 张掖七彩丹霞", km:"550-600 km · 7-8h",
+   dateISO:"2026-09-30", coord:[38.93,100.45],
+   stayName:"七彩丹霞悦客尚景智能酒店", stayDesc:"七彩丹霞景区附近",
+   nodes:["西宁机场","武威","张掖七彩丹霞"],
+   rows:[
+     ["12:00","三组航班陆续落地西宁，全员集合"],
+     ["13:30","取车、补给后出发前往张掖"],
+     ["16:00","服务区休息 15-20 分钟"],
+     ["18:30","晚餐与第二次休息"],
+     ["21:00","抵达七彩丹霞景区附近酒店"]
+   ],
+   tip:"首日=落地+8小时驾驶，全程最累的一天之一，建议轮换驾驶、每1.5-2小时下车活动。"
+  },
+  {n:2, date:"10/1 周四", color:"#C4712A", route:"七彩丹霞 → 张掖 → 酒泉 → 嘉峪关（经过）→ 瓜州 → 敦煌", km:"约580 km · 6.5-7h",
+   dateISO:"2026-10-01", coord:[40.14,94.66],
+   stayName:"途远·雅园景观酒店", stayDesc:"敦煌市沙州北路1号",
+   nodes:["张掖丹霞","酒泉","嘉峪关","瓜州","敦煌"],
+   rows:[
+     ["06:15","酒店出发"],
+     ["06:30","入园七彩丹霞",true],
+     ["09:30","出园，前往敦煌"],
+     ["12:30","服务区午餐"],
+     ["15:30","中途休息"],
+     ["18:00","抵达敦煌"]
+   ],
+   tip:"七彩丹霞2026/9/1-10/31公告开园06:30、闭园18:00，需提前实名预约；06:15出发对06:30开园几乎零缓冲，建议心理预期放宽到06:45-07:00。"
+  },
+  {n:3, date:"10/2 周五", color:"#BD8A2A", route:"敦煌市区 → 莫高窟数字展示中心 → 鸣沙山月牙泉 → 敦煌市区", km:"50-80 km · 少量",
+   dateISO:"2026-10-02", coord:[40.14,94.66],
+   stayName:"悦享·曼朵·观景影音民宿", stayDesc:"敦煌市月牙泉镇月牙泉村三组48号",
+   nodes:["敦煌市区","莫高窟","鸣沙山月牙泉"],
+   rows:[
+     ["07:15","酒店出发"],
+     ["08:00","莫高窟常规参观（张*桐常规票12:30/胡*懿应急票12:25）",true],
+     ["13:30","酒店休息"],
+     ["15:30","前往鸣沙山月牙泉",true],
+     ["日落后","返回敦煌市区"]
+   ],
+   tip:"敦煌休整日，节奏最松；鸣沙山月牙泉已全面取消现场售票，须线上实名预约，3日内多次入园。"
+  },
+  {n:4, date:"10/3 周六", color:"#8FA02A", route:"敦煌 → 阿克塞 → 当金山 → 冷湖 → 黑独山 → 冷湖", km:"280-300 km · 4-5h",
+   dateISO:"2026-10-03", coord:[38.75,93.33],
+   stayName:"星穹秘境品质酒店", stayDesc:"冷湖镇店",
+   nodes:["敦煌","阿克塞","当金山口","冷湖","黑独山"],
+   rows:[
+     ["08:00","敦煌出发"],
+     ["10:30","翻越当金山（约3800米，全程最高点之一）"],
+     ["12:00","抵达冷湖，午餐、加满油"],
+     ["14:00","黑独山游览"],
+     ["18:00","返回冷湖住宿"]
+   ],
+   tip:"⚠️ 连续三天低海拔后骤升到3800米，注意高反：避免剧烈活动、多喝水、备好药物。黑独山免费、非正规景区，无需预约。"
+  },
+  {n:5, date:"10/4 周日", color:"#3F9B6B", route:"冷湖 → 火星一号公路 → 火星营地外围 → G315 → 乌素特水上雅丹", km:"220-260 km · 5-6h",
+   dateISO:"2026-10-04", coord:[38.92,92.98],
+   stayName:"九紫星苑酒店", stayDesc:"海西（详细地址待确认）",
+   nodes:["冷湖","火星一号公路","水上雅丹"],
+   rows:[
+     ["07:00","冷湖出发"],
+     ["09:00","火星一号公路沿线（免费、全天开放）"],
+     ["13:00","接G315继续前往水上雅丹"],
+     ["17:00","抵达水上雅丹",true]
+   ],
+   tip:"长距离砂石/非铺装路，严禁高速冲坑；出发前确认天气、路况、油量与备胎。水上雅丹旺季门票60+观光车60，现场可买但建议线上先买避开排队。"
+  },
+  {n:6, date:"10/5 周一", color:"#2E8B8B", route:"水上雅丹 → 西台吉乃尔湖 → G315 → 察尔汗盐湖 → 格尔木", km:"300-350 km · 4.5-5h",
+   dateISO:"2026-10-05", coord:[36.41,94.90],
+   stayName:"宜必思酒店（格尔木昆仑花园店）", stayDesc:"格尔木",
+   nodes:["水上雅丹","西台吉乃尔湖","察尔汗盐湖","格尔木"],
+   rows:[
+     ["09:00","水上雅丹出发"],
+     ["10:00","西台吉乃尔湖短停（路况待出发前核实）"],
+     ["14:00","察尔汗盐湖",true],
+     ["18:00","抵达格尔木"]
+   ],
+   tip:"察尔汗盐湖核心观光道（万丈盐桥）不能自驾直接进入，需跟团或包车走指定路线，提前确认接驳方式。"
+  },
+  {n:7, date:"10/6 周二", color:"#2E6BAE", route:"格尔木 → 都兰 → 彩虹丹霞·星之谷 → 德令哈 → 茶卡", km:"约500-540 km · 8-9h（含2处下车游览）",
+   dateISO:"2026-10-06", coord:[36.78,99.15],
+   stayName:"茶卡天域假日酒店", stayDesc:"乌兰茶卡镇巴音路北侧",
+   nodes:["格尔木","都兰","星之谷","德令哈","茶卡"],
+   rows:[
+     ["06:30","格尔木出发"],
+     ["09:30","彩虹丹霞·星之谷（压缩至约1-1.5h，为德令哈让时间）",true],
+     ["11:00","继续前往德令哈"],
+     ["12:30","德令哈游览+午餐（约2h）"],
+     ["14:30","经德康高速前往茶卡"],
+     ["17:00-17:30","抵达茶卡镇"]
+   ],
+   tip:"⚠️ 新增德令哈后是全程最长的一天，星之谷+德令哈共约3.5h下车时间，务必按时间表推进；如实际进度晚于19:00仍未到茶卡，建议就近在乌兰县/德令哈住下，次日一早补最后一段，不要赌夜路（牲畜穿行、路面结冰、疲劳驾驶风险都在夜间升高）。"
+  },
+  {n:8, date:"10/7 周三", color:"#5B4EA8", route:"茶卡 → 橡皮山垭口 → 黑马河 → 青海湖沿线（路过） → 西宁", km:"约280-300 km · 5-6h",
+   dateISO:"2026-10-07", coord:[36.62,101.78],
+   stayName:"希岸·轻雅酒店（西宁建国路新千王府井广场店）", stayDesc:"西宁",
+   nodes:["茶卡","橡皮山垭口","黑马河","西宁"],
+   rows:[
+     ["09:00","茶卡出发（或先游盐湖）",true],
+     ["12:00","翻越橡皮山垭口（3817米，全程最高点），午餐"],
+     ["14:00","路过黑马河/青海湖沿线（不停留住宿，不等日出）"],
+     ["17:00","抵达西宁市区，入住希岸·轻雅酒店"]
+   ],
+   tip:"行程调整后不再保留青海湖日出，当天不必赶早，可以从容出发。当天最高点3817米，注意减少剧烈运动。"
+  },
+  {n:9, date:"10/8 周四", color:"#7A4FA0", route:"西宁市区自由活动 → 还车 → 三组返程航班", km:"市区活动，行程待你确认",
+   dateISO:"2026-10-08", coord:[36.62,101.78],
+   stayName:"—", stayDesc:"当晚三组分别登机，不再留宿",
+   nodes:["西宁市区","西宁曹家堡机场"],
+   rows:[
+     ["上午-下午","西宁市区自由活动（具体地点待确认，如塔尔寺/东关清真大寺）"],
+     ["约14:00-15:00","前往机场，加油、还车"],
+     ["16:00","还车（西宁机场店内）"],
+     ["17:35","孙/顾 MU9960 起飞（此后行程不在本手册范围）"],
+     ["18:45","粽 9C7166 起飞"],
+     ["20:30","jia CZ2134 起飞"]
+   ],
+   tip:"这天已不用赶路，是相对轻松的一天。三组航班起飞时间错开1-3小时，提前明确谁先去值机、行李怎么分。市区具体行程等你确认后补充。"
+  }
+];
+
+var MILESTONES = [
+  ["2026-09-30T08:00:00+08:00","粽 HO2245 上海浦东起飞"],
+  ["2026-09-30T08:15:00+08:00","孙/顾 9C7165 · jia ZH8107 起飞"],
+  ["2026-09-30T11:25:00+08:00","粽 抵达西宁"],
+  ["2026-09-30T11:35:00+08:00","jia 抵达西宁"],
+  ["2026-09-30T12:00:00+08:00","孙/顾 抵达西宁 · 全员集合"],
+  ["2026-09-30T13:30:00+08:00","取车出发，前往张掖七彩丹霞"],
+  ["2026-10-01T06:30:00+08:00","七彩丹霞开园"],
+  ["2026-10-01T10:00:00+08:00","从张掖出发前往敦煌"],
+  ["2026-10-02T08:00:00+08:00","莫高窟参观"],
+  ["2026-10-02T15:30:00+08:00","前往鸣沙山月牙泉"],
+  ["2026-10-03T08:00:00+08:00","敦煌出发，翻越当金山前往冷湖"],
+  ["2026-10-03T14:00:00+08:00","黑独山游览"],
+  ["2026-10-04T07:00:00+08:00","冷湖出发，火星一号公路"],
+  ["2026-10-05T09:00:00+08:00","水上雅丹出发，途经察尔汗盐湖"],
+  ["2026-10-06T06:30:00+08:00","格尔木出发，前往星之谷"],
+  ["2026-10-06T12:30:00+08:00","德令哈游览"],
+  ["2026-10-07T09:00:00+08:00","茶卡出发，翻越橡皮山"],
+  ["2026-10-07T17:00:00+08:00","抵达西宁，入住希岸·轻雅酒店"],
+  ["2026-10-08T16:00:00+08:00","还车（西宁机场店内）"],
+  ["2026-10-08T17:35:00+08:00","孙/顾 MU9960 西宁起飞"],
+  ["2026-10-08T18:45:00+08:00","粽 9C7166 西宁起飞"],
+  ["2026-10-08T20:30:00+08:00","jia CZ2134 西宁起飞"]
+];
+
+function weatherDesc(code){
+  if(code===0) return "晴";
+  if(code>=1 && code<=3) return "多云";
+  if(code===45 || code===48) return "有雾";
+  if(code>=51 && code<=57) return "小雨";
+  if(code>=61 && code<=67) return "雨";
+  if(code>=71 && code<=77) return "雪";
+  if(code>=80 && code<=82) return "阵雨";
+  if(code>=85 && code<=86) return "阵雪";
+  if(code>=95) return "雷雨";
+  return "多云";
+}
+function loadWeather(d){
+  var el = document.getElementById("wx-"+d.n);
+  if(!el) return;
+  var url = "https://api.open-meteo.com/v1/forecast?latitude="+d.coord[0]+"&longitude="+d.coord[1]+
+            "&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FShanghai&forecast_days=16";
+  fetch(url).then(function(r){ return r.json(); }).then(function(data){
+    if(!data.daily || !data.daily.time){ el.textContent = "天气暂不可用"; return; }
+    var idx = data.daily.time.indexOf(d.dateISO);
+    if(idx === -1){ el.textContent = "距出发较远，临近日期再查看实时天气"; return; }
+    var tmax = Math.round(data.daily.temperature_2m_max[idx]);
+    var tmin = Math.round(data.daily.temperature_2m_min[idx]);
+    var desc = weatherDesc(data.daily.weathercode[idx]);
+    el.textContent = "预计 " + desc + " " + tmin + "°~" + tmax + "°（更新于打开页面时）";
+  }).catch(function(){
+    el.textContent = "天气加载失败（可能无网络）";
+  });
+}
+function nav(name){
+  var url = "https://uri.amap.com/search?keyword=" + encodeURIComponent(name) + "&src=qhgstrip&callnative=1";
+  window.location.href = url;
+}
+
+var daysEl = document.getElementById("days");
+DAYS.forEach(function(d){
+  var det = document.createElement("details");
+  det.className = "day";
+  det.style.setProperty("--dcolor", d.color);
+
+  var sum = document.createElement("summary");
+  sum.innerHTML =
+    '<div class="dhead"><div>'+
+      '<div class="dnum">D'+d.n+' · '+d.date+'</div>'+
+      '<div class="droute">'+d.route+'</div>'+
+      '<div class="dmeta">'+d.km+'</div>'+
+      '<div class="weather" id="wx-'+d.n+'">天气加载中…</div>'+
+    '</div><div class="caret">展开 ▾</div></div>';
+  det.appendChild(sum);
+  loadWeather(d);
+
+  var body = document.createElement("div");
+  body.className = "body";
+
+  var tl = document.createElement("div");
+  tl.className = "timeline";
+  d.rows.forEach(function(r){
+    var row = document.createElement("div");
+    row.className = "trow";
+    var bookTag = r[2] ? '<span class="book">需预约</span>' : '';
+    row.innerHTML = '<div class="t">'+r[0]+'</div><div class="c">'+r[1]+bookTag+'</div>';
+    tl.appendChild(row);
+  });
+  body.appendChild(tl);
+
+  var nodesLine = document.createElement("div");
+  nodesLine.className = "nodesline";
+  d.nodes.forEach(function(nm, i){
+    var s = document.createElement("span");
+    s.className = "loc";
+    s.textContent = nm;
+    s.onclick = function(){ nav(nm); };
+    nodesLine.appendChild(s);
+    if(i < d.nodes.length-1){ nodesLine.appendChild(document.createTextNode("  →  ")); }
+  });
+  body.appendChild(nodesLine);
+
+  var stay = document.createElement("div");
+  stay.className = "stayline";
+  if(d.stayName === "—"){
+    stay.innerHTML = "住宿：<b>"+d.stayDesc+"</b>";
+  } else {
+    stay.innerHTML = '住宿：<span class="loc" onclick="nav(\''+d.stayName.replace(/'/g,"")+'\')">'+d.stayName+'</span>（'+d.stayDesc+'）';
+  }
+  body.appendChild(stay);
+
+  var tip = document.createElement("div");
+  tip.className = "day-tip";
+  tip.textContent = d.tip;
+  body.appendChild(tip);
+
+  var btn = document.createElement("button");
+  btn.className = "navbtn";
+  btn.textContent = "导航前往今晚住宿";
+  btn.onclick = function(){ nav(d.stayName === "—" ? d.nodes[d.nodes.length-1] : d.stayName); };
+  body.appendChild(btn);
+
+  det.appendChild(body);
+  daysEl.appendChild(det);
+});
+
+(function(){
+  var pathPoints = [
+    [60,60],[38,120],[55,190],[80,260],[68,300],[95,370],[180,398],[260,382],
+    [320,335],[345,255],[352,195],[330,110],[220,55],[60,60]
+  ];
+  var labels = ["西宁机场","武威","张掖","敦煌","","冷湖","水上雅丹","察尔汗/格尔木","星之谷","德令哈","茶卡","西宁","",""];
+  var colors = DAYS.map(function(d){return d.color;});
+  var g = document.getElementById("mapNodes");
+  var svgNS = "http://www.w3.org/2000/svg";
+  for(var i=0;i<pathPoints.length-1;i++){
+    var seg = document.createElementNS(svgNS,"path");
+    var x1=pathPoints[i][0], y1=pathPoints[i][1], x2=pathPoints[i+1][0], y2=pathPoints[i+1][1];
+    var mx=(x1+x2)/2 + (i%2?8:-8), my=(y1+y2)/2 + (i%2?-8:8);
+    seg.setAttribute("d","M"+x1+" "+y1+" Q "+mx+" "+my+" "+x2+" "+y2);
+    seg.setAttribute("fill","none");
+    seg.setAttribute("stroke", colors[Math.min(i, colors.length-1)]);
+    seg.setAttribute("stroke-width","3");
+    seg.setAttribute("stroke-linecap","round");
+    g.appendChild(seg);
+  }
+  pathPoints.forEach(function(p,i){
+    if(!labels[i]) return;
+    var c = document.createElementNS(svgNS,"circle");
+    c.setAttribute("cx",p[0]); c.setAttribute("cy",p[1]); c.setAttribute("r","4.5");
+    c.setAttribute("fill", colors[Math.min(i, colors.length-1)]);
+    g.appendChild(c);
+    var t = document.createElementNS(svgNS,"text");
+    t.setAttribute("x", p[0] + (p[0]>200?-8:8));
+    t.setAttribute("y", p[1]+4);
+    t.setAttribute("text-anchor", p[0]>200 ? "end":"start");
+    t.setAttribute("fill","var(--ink)");
+    t.textContent = labels[i];
+    g.appendChild(t);
+  });
+})();
+
+var legend = document.getElementById("mapLegend");
+DAYS.forEach(function(d){
+  var s = document.createElement("span");
+  s.innerHTML = '<i style="background:'+d.color+'"></i> D'+d.n;
+  legend.appendChild(s);
+});
+
+function updateCountdown(){
+  var now = new Date();
+  var next = null;
+  for(var i=0;i<MILESTONES.length;i++){
+    var t = new Date(MILESTONES[i][0]);
+    if(t > now){ next = {time:t, label:MILESTONES[i][1]}; break; }
+  }
+  var evEl = document.getElementById("hero-event");
+  if(!next){
+    evEl.textContent = "行程已结束，一路平安 ✈";
+    document.getElementById("cd-d").textContent = "0";
+    document.getElementById("cd-h").textContent = "00";
+    document.getElementById("cd-m").textContent = "00";
+    document.getElementById("cd-s").textContent = "00";
+    return;
+  }
+  evEl.textContent = next.label;
+  var diff = next.time - now;
+  var d = Math.floor(diff/86400000);
+  var h = Math.floor(diff%86400000/3600000);
+  var m = Math.floor(diff%3600000/60000);
+  var s = Math.floor(diff%60000/1000);
+  document.getElementById("cd-d").textContent = d;
+  document.getElementById("cd-h").textContent = String(h).padStart(2,"0");
+  document.getElementById("cd-m").textContent = String(m).padStart(2,"0");
+  document.getElementById("cd-s").textContent = String(s).padStart(2,"0");
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+function updateTheme(){
+  var h = new Date().getHours();
+  var isNight = (h < 6 || h >= 19);
+  document.documentElement.classList.toggle("night", isNight);
+}
+updateTheme();
+setInterval(updateTheme, 60000);
+</script>
+</body>
+</html>
